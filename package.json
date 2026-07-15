@@ -1,0 +1,34 @@
+{
+  "name": "nestjs-objects-api",
+  "version": "1.0.0",
+  "description": "API REST NestJS (JavaScript) pour gérer une collection d'objets (MongoDB + Cloudflare R2)",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "node -r @babel/register src/main.js",
+    "start:dev": "nodemon --exec node -r @babel/register src/main.js",
+    "build": "babel src -d dist --copy-files",
+    "start:prod": "node dist/main.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.600.0",
+    "@nestjs/common": "^10.4.0",
+    "@nestjs/config": "^3.2.3",
+    "@nestjs/core": "^10.4.0",
+    "@nestjs/mongoose": "^10.0.6",
+    "@nestjs/platform-express": "^10.4.22",
+    "cloudinary": "^2.10.0",
+    "mongoose": "^8.5.0",
+    "multer": "^1.4.5-lts.1",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.24.8",
+    "@babel/core": "^7.24.9",
+    "@babel/plugin-proposal-decorators": "^7.24.7",
+    "@babel/preset-env": "^7.24.8",
+    "@babel/register": "^7.24.6",
+    "nodemon": "^3.1.4"
+  }
+}
