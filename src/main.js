@@ -1,15 +1,31 @@
-require('reflect-metadata');
+// Point d'entrée pour Vercel Functions.
+// Ce fichier ne contient VOLONTAIREMENT aucun décorateur NestJS : il doit
+// pouvoir être lu tel quel par le builder @vercel/node, sans passer par
+// notre config Babel personnalisée.
+//
+// Il requiert la version DÉJÀ COMPILÉE de l'appli (dist/app.module.js,
+// générée par `npm run build`, qui elle applique bien Babel) plutôt que
+// le code source brut avec décorateurs.
 const { NestFactory } = require('@nestjs/core');
-const { AppModule } = require('./app.module');
+const { AppModule } = require('./dist/app.module');
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+// Instance Nest gardée en mémoire entre deux invocations "à chaud" de la
+// fonction, pour éviter de tout réinitialiser (et de rouvrir une connexion
+// MongoDB) à chaque requête.
+let cachedApp;
 
-  // CORS activé : Notice indique que "tous les apps devraient communiquer avec l'API"
-  app.enableCors();
-
-  const port = process.env.PORT || 3000;
-  await app.listen(port);
-  console.log(`🚀 API démarrée sur http://localhost:${port}`);
+async function bootstrapServer() {
+    if (!cachedApp) {
+        const app = await NestFactory.create(AppModule);
+        app.enableCors();
+        await app.init();
+        cachedApp = app;
+    }
+    return cachedApp;
 }
-bootstrap();
+
+module.exports = async (req, res) => {
+    const app = await bootstrapServer();
+    const httpAdapter = app.getHttpAdapter();
+    return httpAdapter.getInstance()(req, res);
+};
