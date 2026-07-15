@@ -61,6 +61,40 @@ class ObjectsService {
     return object;
   }
 
+  async update(id, dto) {
+    const { title, description } = dto || {};
+
+    if (title === undefined && description === undefined) {
+      throw new BadRequestException(
+        'Au moins un des champs "title" ou "description" doit être fourni.',
+      );
+    }
+    if (title !== undefined && (typeof title !== 'string' || !title)) {
+      throw new BadRequestException(
+        'Le champ "title" doit être une chaîne de caractères non vide.',
+      );
+    }
+    if (
+      description !== undefined &&
+      (typeof description !== 'string' || !description)
+    ) {
+      throw new BadRequestException(
+        'Le champ "description" doit être une chaîne de caractères non vide.',
+      );
+    }
+
+    const object = await this.findOne(id); // lève une 404 si non trouvé
+
+    if (title !== undefined) {
+      object.title = title;
+    }
+    if (description !== undefined) {
+      object.description = description;
+    }
+
+    return object.save();
+  }
+
   async remove(id) {
     const object = await this.findOne(id); // lève une 404 si non trouvé
 

@@ -2,6 +2,7 @@ const {
   Controller,
   Get,
   Post,
+  Patch,
   Delete,
   Param,
   Body,
@@ -42,6 +43,13 @@ class ObjectsController {
   @Bind(Param('id'))
   findOne(id) {
     return this.objectsService.findOne(id);
+  }
+
+  // PATCH /objects/:id  -- JSON avec title et/ou description (au moins un requis)
+  @Patch(':id')
+  @Bind(Param('id'), Body())
+  update(id, updateObjectDto) {
+    return this.objectsService.update(id, updateObjectDto);
   }
 
   // DELETE /objects/:id
