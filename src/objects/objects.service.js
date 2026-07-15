@@ -35,7 +35,7 @@ class ObjectsService {
       throw new BadRequestException('Le fichier image (imgFile) est requis.');
     }
 
-    // 1. Télécharger l'image vers le stockage S3-compatible (Backblaze B2)
+    // 1. Télécharger l'image vers Cloudinary
     const { url, key } = await this.storageService.uploadFile(imgFile);
 
     // 2. Enregistrer l'objet en base MongoDB avec l'URL de l'image
@@ -64,7 +64,7 @@ class ObjectsService {
   async remove(id) {
     const object = await this.findOne(id); // lève une 404 si non trouvé
 
-    // 1. Supprimer l'image du stockage S3
+    // 1. Supprimer l'image de Cloudinary
     await this.storageService.deleteFile(object.imageKey);
 
     // 2. Supprimer l'objet de MongoDB

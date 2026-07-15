@@ -8,7 +8,7 @@ const ObjectSchema = new Schema(
     title: { type: String, required: true },
     description: { type: String, required: true },
 
-    // URL publique de l'image stockée dans Backblaze B2
+    // URL publique de l'image stockée sur Cloudinary
     imageUrl: { type: String, required: true },
 
     // Clé du fichier dans le bucket, utile pour pouvoir le supprimer plus tard

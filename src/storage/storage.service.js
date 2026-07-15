@@ -8,12 +8,20 @@ const { v4: uuidv4 } = require('uuid');
 @Dependencies(ConfigService)
 class StorageService {
   constructor(configService) {
-    this.configService = configService;
+    const cloudName = configService.get('CLOUDINARY_CLOUD_NAME');
+    const apiKey = configService.get('CLOUDINARY_API_KEY');
+    const apiSecret = configService.get('CLOUDINARY_API_SECRET');
+
+    if (!cloudName || !apiKey || !apiSecret) {
+      throw new Error(
+        'Configuration Cloudinary manquante : CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY et CLOUDINARY_API_SECRET sont requis.',
+      );
+    }
 
     cloudinary.config({
-      cloud_name: configService.get('CLOUDINARY_CLOUD_NAME'),
-      api_key: configService.get('CLOUDINARY_API_KEY'),
-      api_secret: configService.get('CLOUDINARY_API_SECRET'),
+      cloud_name: cloudName,
+      api_key: apiKey,
+      api_secret: apiSecret,
     });
 
     this.cloudinary = cloudinary;
